@@ -134,19 +134,42 @@ namespace University
             }
             else if (e.CommandName == "Eliminar")
             {
-                using (MySqlConnection con = new MySqlConnection(connectionString))
+                try
                 {
-                    MySqlCommand cmd = new MySqlCommand("sp_delete_career", con);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("p_id", id);
+                    using (MySqlConnection con = new MySqlConnection(connectionString))
+                    {
+                        // Verificar si la carrera tiene profesores asociados
+                        MySqlCommand checkCmd = new MySqlCommand("SELECT COUNT(*) FROM professor WHERE career_id=@id", con);
+                        checkCmd.Parameters.AddWithValue("@id", id);
 
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-                    con.Close();
+                        con.Open();
+                        int count = Convert.ToInt32(checkCmd.ExecuteScalar());
+
+                        if (count > 0)
+                        {
+                            // No se puede eliminar
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert",
+                                "alert('No se puede eliminar esta carrera porque tiene profesores asociados.');", true);
+                        }
+                        else
+                        {
+                            MySqlCommand cmd = new MySqlCommand("sp_delete_career", con);
+                            cmd.CommandType = CommandType.StoredProcedure;
+                            cmd.Parameters.AddWithValue("p_id", id);
+                            cmd.ExecuteNonQuery();
+
+                            ClearForm();
+                            LoadCareer();
+                        }
+
+                        con.Close();
+                    }
                 }
-
-                ClearForm();
-                LoadCareer();
+                catch (MySqlException ex)
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert",
+                        $"alert('Error al eliminar: {ex.Message}');", true);
+                }
             }
         }
 
