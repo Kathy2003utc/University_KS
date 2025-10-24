@@ -101,67 +101,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-        <script>
-            $(document).ready(function () {
-
-                // Inicialmente bloqueamos el botón Actualizar
-                $("#<%= btnUpdate.ClientID %>").prop("disabled", true);
-
-                // Validación jQuery
-                $("#<%= form2.ClientID %>").validate({
-                    rules: {
-                        txtName: { required: true },
-                        txtAcronym: { required: true },
-                        txtDean: { required: true },
-                        txtPhone: { required: true, digits: true, minlength: 10, maxlength: 10 },
-                        txtEmail: { required: true, email: true },
-                        txtYearFoundation: {
-                            required: true,
-                            digits: true,
-                            min: new Date().getFullYear() - 50,
-                            max: new Date().getFullYear()
-                        },
-                        txtLogo: { required: true, url: true }
-                    },
-                    messages: {
-                        txtName: "Ingrese el nombre de la facultad",
-                        txtAcronym: "Ingrese el acrónimo",
-                        txtDean: "Ingrese el nombre del decano",
-                        txtPhone: {
-                            required: "Ingrese el teléfono",
-                            digits: "Solo números",
-                            minlength: "El teléfono debe tener 10 dígitos",
-                            maxlength: "El teléfono debe tener 10 dígitos"
-                        },
-                        txtEmail: {
-                            required: "Ingrese un correo electrónico",
-                            email: "Ingrese un correo válido"
-                        },
-                        txtYearFoundation: {
-                            required: "Ingrese el año de fundación",
-                            digits: "Solo números",
-                            min: "No puede ser mayor a 50 años atrás",
-                            max: "No puede ser un año futuro"
-                        },
-                        txtLogo: {
-                            required: "Ingrese la URL del logo",
-                            url: "Ingrese una URL válida (http/https)"
-                        }
-                    },
-                    errorClass: "text-danger",
-                    errorPlacement: function (error, element) {
-                        error.insertAfter(element);
-                    },
-                    highlight: function (element) {
-                        $(element).addClass("is-invalid");
-                    },
-                    unhighlight: function (element) {
-                        $(element).removeClass("is-invalid");
-                    }
-                });
-
-            });
-        </script>
+        
     </form>
 </body>
 </html>
