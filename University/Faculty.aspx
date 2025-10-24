@@ -9,7 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 </head>
 <body class="bg-light">
     <form id="form2" runat="server" class="container mt-5">
@@ -20,43 +19,31 @@
 
             <div class="card-body">
                 <div class="row g-3">
-                    <!-- Nombre -->
+                    <!-- Campos del formulario -->
                     <div class="col-md-6">
                         <label for="txtName" class="form-label fw-semibold">Nombre</label>
                         <asp:TextBox ID="txtName" runat="server" CssClass="form-control" placeholder="Nombre de la facultad" />
                     </div>
-
-                    <!-- Acrónimo -->
                     <div class="col-md-6">
                         <label for="txtAcronym" class="form-label fw-semibold">Acrónimo</label>
                         <asp:TextBox ID="txtAcronym" runat="server" CssClass="form-control" placeholder="Ej. FISEI" />
                     </div>
-
-                    <!-- Decano -->
                     <div class="col-md-6">
                         <label for="txtDean" class="form-label fw-semibold">Decano</label>
                         <asp:TextBox ID="txtDean" runat="server" CssClass="form-control" placeholder="Nombre del decano" />
                     </div>
-
-                    <!-- Logo -->
                     <div class="col-md-6">
                         <label for="txtLogo" class="form-label fw-semibold">Logo (URL)</label>
                         <asp:TextBox ID="txtLogo" runat="server" CssClass="form-control" placeholder="Ruta o enlace del logo" />
                     </div>
-
-                    <!-- Teléfono -->
                     <div class="col-md-6">
                         <label for="txtPhone" class="form-label fw-semibold">Teléfono</label>
                         <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" placeholder="Ej. 0999999999" />
                     </div>
-
-                    <!-- Correo -->
                     <div class="col-md-6">
                         <label for="txtEmail" class="form-label fw-semibold">Correo</label>
                         <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="ejemplo@universidad.edu.ec" />
                     </div>
-
-                    <!-- Año de Fundación -->
                     <div class="col-md-6">
                         <label for="txtYearFoundation" class="form-label fw-semibold">Año de Fundación</label>
                         <asp:TextBox ID="txtYearFoundation" runat="server" CssClass="form-control" placeholder="Ej. 1990" />
@@ -93,7 +80,8 @@
                                     CssClass="btn btn-sm btn-danger"
                                     CommandName="EliminarFila"
                                     CommandArgument='<%# Eval("faculty_id") %>'
-                                    CausesValidation="false" />
+                                    CausesValidation="false"
+                                    OnClientClick="return confirmDelete(this);" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -105,11 +93,8 @@
 
         <script>
             $(document).ready(function () {
-
-                // Inicialmente bloqueamos el botón Actualizar
                 $("#<%= btnUpdate.ClientID %>").prop("disabled", true);
 
-                // Validación jQuery
                 $("#<%= form2.ClientID %>").validate({
                     rules: {
                         txtName: { required: true },
@@ -151,18 +136,30 @@
                         }
                     },
                     errorClass: "text-danger",
-                    errorPlacement: function (error, element) {
-                        error.insertAfter(element);
-                    },
-                    highlight: function (element) {
-                        $(element).addClass("is-invalid");
-                    },
-                    unhighlight: function (element) {
-                        $(element).removeClass("is-invalid");
+                    errorPlacement: function (error, element) { error.insertAfter(element); },
+                    highlight: function (element) { $(element).addClass("is-invalid"); },
+                    unhighlight: function (element) { $(element).removeClass("is-invalid"); }
+                });
+            });
+
+            // Función SweetAlert2 para confirmar eliminación
+            function confirmDelete(btn) {
+                Swal.fire({
+                    title: '¿Está seguro?',
+                    text: "¡No podrá revertir esto!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        __doPostBack(btn.name, btn.value);
                     }
                 });
-
-            });
+                return false; // Evita postback inmediato
+            }
         </script>
     </form>
 </body>

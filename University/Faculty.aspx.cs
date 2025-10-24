@@ -67,6 +67,7 @@ namespace University
             ClearForm();
             LoadFaculty();
 
+            // Mensaje de éxito al agregar
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alertAdd",
                 "Swal.fire({icon: 'success', title: '¡Éxito!', text: 'Facultad agregada correctamente.'});", true);
         }
@@ -99,6 +100,7 @@ namespace University
             ClearForm();
             LoadFaculty();
 
+            // Mensaje de éxito al actualizar
             ScriptManager.RegisterStartupScript(this, this.GetType(), "alertUpdate",
                 "Swal.fire({icon: 'success', title: '¡Actualizado!', text: 'Facultad actualizada correctamente.'});", true);
         }
@@ -128,6 +130,7 @@ namespace University
                         txtLogo.Text = reader["logo_fac"].ToString();
                         txtYearFoundation.Text = reader["year_foundation_fac"].ToString();
 
+                        // Bloquear botón Agregar y habilitar Actualizar
                         btnAdd.Enabled = false;
                         btnUpdate.Enabled = true;
                     }
@@ -136,28 +139,6 @@ namespace University
             }
             else if (e.CommandName == "EliminarFila")
             {
-                // Mostrar confirmación con SweetAlert2
-                string scriptConfirm = $@"
-                    Swal.fire({{
-                        title: '¿Está seguro?',
-                        text: '¡No podrá revertir esto!',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Sí, eliminar',
-                        cancelButtonText: 'Cancelar'
-                    }}).then((result) => {{
-                        if(result.isConfirmed) {{
-                            __doPostBack('{gvFaculty.UniqueID}', 'ConfirmDelete${id}');
-                        }}
-                    }});";
-
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "confirmDelete", scriptConfirm, true);
-            }
-            else if (e.CommandName.StartsWith("ConfirmDelete"))
-            {
-                // Eliminar realmente
                 using (MySqlConnection con = new MySqlConnection(connectionString))
                 {
                     MySqlCommand cmd = new MySqlCommand("sp_delete_faculty", con);
@@ -175,6 +156,7 @@ namespace University
                 ScriptManager.RegisterStartupScript(this, this.GetType(), "alertDelete",
                     "Swal.fire({icon: 'success', title: '¡Eliminado!', text: 'Facultad eliminada correctamente.'});", true);
             }
+
         }
 
         // Limpiar campos del formulario
@@ -189,6 +171,7 @@ namespace University
             txtYearFoundation.Text = "";
             ViewState["faculty_id"] = null;
 
+            // Restaurar estado de botones
             btnAdd.Enabled = true;
             btnUpdate.Enabled = false;
         }
