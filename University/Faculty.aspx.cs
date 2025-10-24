@@ -31,7 +31,6 @@ namespace University
             {
                 MySqlCommand cmd = new MySqlCommand("sp_list_faculty", con);
                 cmd.CommandType = CommandType.StoredProcedure;
-
                 MySqlDataAdapter da = new MySqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
@@ -41,7 +40,6 @@ namespace University
             }
         }
 
-        // Agregar una nueva facultad
         protected void btnAdd_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid) return;
@@ -68,10 +66,8 @@ namespace University
             LoadFaculty();
         }
 
-        // Actualizar una facultad existente
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
-            if (!Page.IsValid) return;
             if (ViewState["faculty_id"] == null) return;
 
             using (MySqlConnection con = new MySqlConnection(connectionString))
@@ -97,12 +93,11 @@ namespace University
             LoadFaculty();
         }
 
-        // Comandos del GridView (Actualizar/Eliminar)
         protected void gvFaculty_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             int id = Convert.ToInt32(e.CommandArgument);
 
-            if (e.CommandName == "ActualizarFila")
+            if (e.CommandName == "Editar")
             {
                 using (MySqlConnection con = new MySqlConnection(connectionString))
                 {
@@ -122,18 +117,13 @@ namespace University
                         txtLogo.Text = reader["logo_fac"].ToString();
                         txtYearFoundation.Text = reader["year_foundation_fac"].ToString();
 
-                        // Habilitar botón Actualizar y deshabilitar Agregar
                         btnAdd.Enabled = false;
                         btnUpdate.Enabled = true;
-
-                        // Ejecutar script en cliente para reflejar el cambio
-                        ScriptManager.RegisterStartupScript(this, this.GetType(), "enableUpdate", "$('#" + btnUpdate.ClientID + "').prop('disabled', false); $('#" + btnAdd.ClientID + "').prop('disabled', true);", true);
                     }
                     con.Close();
                 }
             }
-
-            else if (e.CommandName == "EliminarFila")
+            else if (e.CommandName == "Eliminar")
             {
                 using (MySqlConnection con = new MySqlConnection(connectionString))
                 {
@@ -151,7 +141,6 @@ namespace University
             }
         }
 
-        // Limpiar campos del formulario
         private void ClearForm()
         {
             txtName.Text = "";
@@ -163,7 +152,6 @@ namespace University
             txtYearFoundation.Text = "";
             ViewState["faculty_id"] = null;
 
-            // Restaurar estado de botones
             btnAdd.Enabled = true;
             btnUpdate.Enabled = false;
         }

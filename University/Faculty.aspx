@@ -18,7 +18,6 @@
             </div>
             <div class="card-body">
                 <div class="row g-3">
-                    <!-- Campos -->
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Nombre</label>
                         <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
@@ -49,7 +48,6 @@
                     </div>
                 </div>
 
-                <!-- Botones -->
                 <div class="text-center mt-4">
                     <asp:Button ID="btnAdd" runat="server" CssClass="btn btn-success me-2 px-4" Text="Agregar" OnClick="btnAdd_Click" />
                     <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-warning px-4" Text="Actualizar" OnClick="btnUpdate_Click" Enabled="false" />
@@ -57,7 +55,6 @@
 
                 <hr class="my-4" />
 
-                <!-- Grid -->
                 <asp:GridView ID="gvFaculty" runat="server" CssClass="table table-striped table-hover text-center"
                     AutoGenerateColumns="False" DataKeyNames="faculty_id" OnRowCommand="gvFaculty_RowCommand">
                     <Columns>
@@ -80,6 +77,63 @@
                 </asp:GridView>
             </div>
         </div>
+
+        <script>
+            $(document).ready(function () {
+                var validator = $("#<%= form2.ClientID %>").validate({
+                    rules: {
+                        '<%= txtName.UniqueID %>': { required: true },
+                        '<%= txtAcronym.UniqueID %>': { required: true },
+                        '<%= txtDean.UniqueID %>': { required: true },
+                        '<%= txtPhone.UniqueID %>': { required: true, digits: true, minlength: 10, maxlength: 10 },
+                        '<%= txtEmail.UniqueID %>': { required: true, email: true },
+                        '<%= txtYearFoundation.UniqueID %>': {
+                            required: true,
+                            digits: true,
+                            min: new Date().getFullYear() - 100,
+                            max: new Date().getFullYear()
+                        },
+                        '<%= txtLogo.UniqueID %>': { required: true, url: true }
+                    },
+                    messages: {
+                        '<%= txtName.UniqueID %>': "Ingrese el nombre de la facultad",
+                        '<%= txtAcronym.UniqueID %>': "Ingrese el acrónimo",
+                        '<%= txtDean.UniqueID %>': "Ingrese el nombre del decano",
+                        '<%= txtPhone.UniqueID %>': {
+                            required: "Ingrese el teléfono",
+                            digits: "Solo números",
+                            minlength: "El teléfono debe tener 10 dígitos",
+                            maxlength: "El teléfono debe tener 10 dígitos"
+                        },
+                        '<%= txtEmail.UniqueID %>': {
+                            required: "Ingrese un correo electrónico",
+                            email: "Ingrese un correo válido"
+                        },
+                        '<%= txtYearFoundation.UniqueID %>': {
+                            required: "Ingrese el año de fundación",
+                            digits: "Solo números",
+                            min: "No puede ser mayor a 100 años atrás",
+                            max: "No puede ser un año futuro"
+                        },
+                        '<%= txtLogo.UniqueID %>': {
+                            required: "Ingrese la URL del logo",
+                            url: "Ingrese una URL válida (http/https)"
+                        }
+                    },
+                    errorClass: "text-danger",
+                    errorPlacement: function (error, element) {
+                        error.insertAfter(element);
+                    },
+                    highlight: function (element) {
+                        $(element).addClass("is-invalid");
+                    },
+                    unhighlight: function (element) {
+                        $(element).removeClass("is-invalid");
+                    }
+                });
+            });
+        </script>
+
     </form>
 </body>
 </html>
