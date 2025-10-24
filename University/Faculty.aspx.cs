@@ -66,10 +66,6 @@ namespace University
 
             ClearForm();
             LoadFaculty();
-
-            // Mensaje de éxito al agregar
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "alertAdd",
-                "Swal.fire({icon: 'success', title: '¡Éxito!', text: 'Facultad agregada correctamente.'});", true);
         }
 
         // Actualizar una facultad existente
@@ -99,10 +95,6 @@ namespace University
 
             ClearForm();
             LoadFaculty();
-
-            // Mensaje de éxito al actualizar
-            ScriptManager.RegisterStartupScript(this, this.GetType(), "alertUpdate",
-                "Swal.fire({icon: 'success', title: '¡Actualizado!', text: 'Facultad actualizada correctamente.'});", true);
         }
 
         // Comandos del GridView (Actualizar/Eliminar)
@@ -130,13 +122,17 @@ namespace University
                         txtLogo.Text = reader["logo_fac"].ToString();
                         txtYearFoundation.Text = reader["year_foundation_fac"].ToString();
 
-                        // Bloquear botón Agregar y habilitar Actualizar
+                        // Habilitar botón Actualizar y deshabilitar Agregar
                         btnAdd.Enabled = false;
                         btnUpdate.Enabled = true;
+
+                        // Ejecutar script en cliente para reflejar el cambio
+                        ScriptManager.RegisterStartupScript(this, this.GetType(), "enableUpdate", "$('#" + btnUpdate.ClientID + "').prop('disabled', false); $('#" + btnAdd.ClientID + "').prop('disabled', true);", true);
                     }
                     con.Close();
                 }
             }
+
             else if (e.CommandName == "EliminarFila")
             {
                 using (MySqlConnection con = new MySqlConnection(connectionString))
@@ -152,11 +148,7 @@ namespace University
 
                 ClearForm();
                 LoadFaculty();
-
-                ScriptManager.RegisterStartupScript(this, this.GetType(), "alertDelete",
-                    "Swal.fire({icon: 'success', title: '¡Eliminado!', text: 'Facultad eliminada correctamente.'});", true);
             }
-
         }
 
         // Limpiar campos del formulario

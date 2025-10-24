@@ -8,58 +8,57 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/additional-methods.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-light">
     <form id="form2" runat="server" class="container mt-5">
+        <asp:ScriptManager ID="ScriptManager1" runat="server" />
         <div class="card shadow-lg">
             <div class="card-header bg-primary text-white text-center">
                 <h3 class="mb-0">Gestión de Facultades</h3>
             </div>
-
             <div class="card-body">
                 <div class="row g-3">
-                    <!-- Campos del formulario -->
+                    <!-- Campos -->
                     <div class="col-md-6">
-                        <label for="txtName" class="form-label fw-semibold">Nombre</label>
-                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control" placeholder="Nombre de la facultad" />
+                        <label class="form-label fw-semibold">Nombre</label>
+                        <asp:TextBox ID="txtName" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtAcronym" class="form-label fw-semibold">Acrónimo</label>
-                        <asp:TextBox ID="txtAcronym" runat="server" CssClass="form-control" placeholder="Ej. FISEI" />
+                        <label class="form-label fw-semibold">Acrónimo</label>
+                        <asp:TextBox ID="txtAcronym" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtDean" class="form-label fw-semibold">Decano</label>
-                        <asp:TextBox ID="txtDean" runat="server" CssClass="form-control" placeholder="Nombre del decano" />
+                        <label class="form-label fw-semibold">Decano</label>
+                        <asp:TextBox ID="txtDean" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtLogo" class="form-label fw-semibold">Logo (URL)</label>
-                        <asp:TextBox ID="txtLogo" runat="server" CssClass="form-control" placeholder="Ruta o enlace del logo" />
+                        <label class="form-label fw-semibold">Logo (URL)</label>
+                        <asp:TextBox ID="txtLogo" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtPhone" class="form-label fw-semibold">Teléfono</label>
-                        <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" placeholder="Ej. 0999999999" />
+                        <label class="form-label fw-semibold">Teléfono</label>
+                        <asp:TextBox ID="txtPhone" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtEmail" class="form-label fw-semibold">Correo</label>
-                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" placeholder="ejemplo@universidad.edu.ec" />
+                        <label class="form-label fw-semibold">Correo</label>
+                        <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" />
                     </div>
                     <div class="col-md-6">
-                        <label for="txtYearFoundation" class="form-label fw-semibold">Año de Fundación</label>
-                        <asp:TextBox ID="txtYearFoundation" runat="server" CssClass="form-control" placeholder="Ej. 1990" />
+                        <label class="form-label fw-semibold">Año de Fundación</label>
+                        <asp:TextBox ID="txtYearFoundation" runat="server" CssClass="form-control" />
                     </div>
                 </div>
 
                 <!-- Botones -->
                 <div class="text-center mt-4">
                     <asp:Button ID="btnAdd" runat="server" CssClass="btn btn-success me-2 px-4" Text="Agregar" OnClick="btnAdd_Click" />
-                    <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-warning px-4" Text="Actualizar" OnClick="btnUpdate_Click" />
+                    <asp:Button ID="btnUpdate" runat="server" CssClass="btn btn-warning px-4" Text="Actualizar" OnClick="btnUpdate_Click" Enabled="false" />
                 </div>
 
                 <hr class="my-4" />
 
-                <!-- Tabla -->
-                <asp:GridView ID="gvFaculty" runat="server" CssClass="table table-striped table-hover text-center align-middle"
+                <!-- Grid -->
+                <asp:GridView ID="gvFaculty" runat="server" CssClass="table table-striped table-hover text-center"
                     AutoGenerateColumns="False" DataKeyNames="faculty_id" OnRowCommand="gvFaculty_RowCommand">
                     <Columns>
                         <asp:BoundField DataField="faculty_id" HeaderText="ID" ReadOnly="True" />
@@ -71,96 +70,16 @@
                         <asp:BoundField DataField="year_foundation_fac" HeaderText="Año Fundación" />
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
-                                <asp:Button ID="btnEdit" runat="server" Text="Editar"
-                                    CssClass="btn btn-sm btn-primary me-1"
-                                    CommandName="ActualizarFila"
-                                    CommandArgument='<%# Eval("faculty_id") %>'
-                                    CausesValidation="false" />
-                                <asp:Button ID="btnDelete" runat="server" Text="Eliminar"
-                                    CssClass="btn btn-sm btn-danger"
-                                    CommandName="EliminarFila"
-                                    CommandArgument='<%# Eval("faculty_id") %>'
-                                    CausesValidation="false"
-                                    OnClientClick="return confirmDelete(this);" />
+                                <asp:LinkButton ID="btnEdit" runat="server" Text="Editar"
+                                    CommandName="Editar" CommandArgument='<%# Eval("faculty_id") %>' CssClass="btn btn-sm btn-primary me-1" />
+                                <asp:LinkButton ID="btnDelete" runat="server" Text="Eliminar"
+                                    CommandName="Eliminar" CommandArgument='<%# Eval("faculty_id") %>' CssClass="btn btn-sm btn-danger" />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
                 </asp:GridView>
             </div>
         </div>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-        <script>
-            $(document).ready(function () {
-                $("#<%= btnUpdate.ClientID %>").prop("disabled", true);
-
-                $("#<%= form2.ClientID %>").validate({
-                    rules: {
-                        txtName: { required: true },
-                        txtAcronym: { required: true },
-                        txtDean: { required: true },
-                        txtPhone: { required: true, digits: true, minlength: 10, maxlength: 10 },
-                        txtEmail: { required: true, email: true },
-                        txtYearFoundation: {
-                            required: true,
-                            digits: true,
-                            min: new Date().getFullYear() - 50,
-                            max: new Date().getFullYear()
-                        },
-                        txtLogo: { required: true, url: true }
-                    },
-                    messages: {
-                        txtName: "Ingrese el nombre de la facultad",
-                        txtAcronym: "Ingrese el acrónimo",
-                        txtDean: "Ingrese el nombre del decano",
-                        txtPhone: {
-                            required: "Ingrese el teléfono",
-                            digits: "Solo números",
-                            minlength: "El teléfono debe tener 10 dígitos",
-                            maxlength: "El teléfono debe tener 10 dígitos"
-                        },
-                        txtEmail: {
-                            required: "Ingrese un correo electrónico",
-                            email: "Ingrese un correo válido"
-                        },
-                        txtYearFoundation: {
-                            required: "Ingrese el año de fundación",
-                            digits: "Solo números",
-                            min: "No puede ser mayor a 50 años atrás",
-                            max: "No puede ser un año futuro"
-                        },
-                        txtLogo: {
-                            required: "Ingrese la URL del logo",
-                            url: "Ingrese una URL válida (http/https)"
-                        }
-                    },
-                    errorClass: "text-danger",
-                    errorPlacement: function (error, element) { error.insertAfter(element); },
-                    highlight: function (element) { $(element).addClass("is-invalid"); },
-                    unhighlight: function (element) { $(element).removeClass("is-invalid"); }
-                });
-            });
-
-            // Función SweetAlert2 para confirmar eliminación
-            function confirmDelete(btn) {
-                Swal.fire({
-                    title: '¿Está seguro?',
-                    text: "¡No podrá revertir esto!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        __doPostBack(btn.name, btn.value);
-                    }
-                });
-                return false; // Evita postback inmediato
-            }
-        </script>
     </form>
 </body>
 </html>
